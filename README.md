@@ -1,6 +1,6 @@
 # Runninng spider
 
-## Augmentations list
+## Augmentations list (Image and Bounding box level)
 1. Grey scale
 2. Gaussian blur
 3. Horizontal flip
