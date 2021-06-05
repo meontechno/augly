@@ -1,4 +1,4 @@
-# Runninng spider
+# Augly
 
 ## Augmentations list (Image and Bounding box level)
 1. Grey scale
