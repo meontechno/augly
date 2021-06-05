@@ -1,4 +1,6 @@
 import os
+import logging
+import datetime
 
 import cv2
 
@@ -23,12 +25,16 @@ def path_to_string(path):
     return path
 
 
-def save(filepath, overwrite=True):
+def save(img, op, filepath, overwrite=True):
     """
 
     """
+    timestamp = datetime.datetime.now().strftime("%m%d%H%M%S%f%Z")
     filepath = path_to_string(filepath)
-    print(filepath)
+    name = filepath.rsplit('.', 1)[0]
+    ext = filepath.rsplit('.', 1)[1]
+    logging.info(name+op+timestamp+'.'+ext)
+    cv2.imwrite(name+op+timestamp+'.'+ext, img)
 
 
 def load(filepath):
