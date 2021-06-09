@@ -26,23 +26,20 @@ import logging
 
 
 class Load:
-    """Convert `PathLike` objects to their string representation.
+    """Loads image data at a directory level or a single file.
     
-    If given a non-string typed path object, converts it to its string
-    representation.
-    
-    If the object passed to `path` is not among the above, then it is
-    returned unchanged. This allows e.g. passthrough of file objects
-    through this function.
+    Label files (txt, xml etc) corresponding to the images can be loaded
+    to apply image transformations.
     
     Args:
-        path: `PathLike` object that represents a path
-    Returns:
-        A string representation of the path argument, if Python support exists.
+        path: `PathLike` object that represents a dir/file path
+        load_labels: Boolean. True to load corresponding label file for
+            transformation
+        label_type: label file type to load. txt/xml
+    
     """
-    def __init__(self, path, isdir=True, load_labels=False, label_type="txt"):
+    def __init__(self, path, load_labels=False, label_type="txt"):
         self.path = path
-        self.isdir = isdir
         self.load_labels = load_labels
         self.label_type = label_type
         self.images, self.labels, self.missing_labels = self.list()
@@ -50,17 +47,26 @@ class Load:
     
     def list(self):
         (images, labels, missing_labels) = ([], [], [])
-        if self.isdir:
+        supported_types = (".jpg", ".jpeg", ".png")
+        if self.path.endswith(supported_types):
+            images.append(self.path)
+            if not self.verify_label():
+                missing_labels.append(self.path)
+        else:
             for file in os.listdir(self.path):
-                if file.endswith((".jpg", ".jpeg", ".png")):
+                if file.endswith(supported_types):
                     images.append(os.path.join(self.path, file))
                     if self.load_labels:
-                        if not self.verify_label(file):
+                        if not self.verify_labels(file):
                             missing_labels.append(file)
         return images, labels, missing_labels
 
-    
-    def verify_label(self, file):
+
+    def verify_label(self):
+        split = self.path.rsplit('/')
+        label = split[1].rsplit('.')[0] + '.' + self.label_type
+        return os.path.isfile(os.path.join(split[0], label))
+
+    def verify_labels(self, file):
         label = file.rsplit('.')[0] + "." + self.label_type
         return os.path.isfile(os.path.join(self.path, label))
-
