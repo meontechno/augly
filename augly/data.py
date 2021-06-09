@@ -39,34 +39,42 @@ class Load:
     
     """
     def __init__(self, path, load_labels=False, label_type="txt"):
+        if not os.path.exists(path):
+            raise ValueError("Invalid file/directory path")
+        
         self.path = path
         self.load_labels = load_labels
         self.label_type = label_type
-        self.images, self.labels, self.missing_labels = self.list()
+        self.data_dict = self.generate_data_dict()
 
     
-    def list(self):
-        (images, labels, missing_labels) = ([], [], [])
+    def generate_data_dict(self):
+        data_dict = {}
         supported_types = (".jpg", ".jpeg", ".png")
-        if self.path.endswith(supported_types):
-            images.append(self.path)
-            if not self.verify_label():
-                missing_labels.append(self.path)
+        if os.path.isfile(self.path):
+            if not self.path.endswith(supported_types):
+                raise ValueError("Image format not supported. (jpg, jpeg, png)")
+            data_dict[self.path] = self.get_label(self.path) if self.load_labels else None
         else:
             for file in os.listdir(self.path):
                 if file.endswith(supported_types):
-                    images.append(os.path.join(self.path, file))
-                    if self.load_labels:
-                        if not self.verify_labels(file):
-                            missing_labels.append(file)
-        return images, labels, missing_labels
+                    file_path = os.path.join(self.path, file)
+                    data_dict[file_path] = self.get_label(file_path) if self.load_labels else None
+        return data_dict
 
 
-    def verify_label(self):
-        split = self.path.rsplit('/')
-        label = split[1].rsplit('.')[0] + '.' + self.label_type
-        return os.path.isfile(os.path.join(split[0], label))
+    def get_label(self, file_path):
+        split = file_path.rsplit('/', 1)
+        label = split[1].rsplit('.', 1)[0] + '.' + self.label_type
+        label_path = os.path.join(split[0]+'/', label)
+        if not os.path.isfile(label_path):
+            return None
+        return label_path
 
-    def verify_labels(self, file):
-        label = file.rsplit('.')[0] + "." + self.label_type
-        return os.path.isfile(os.path.join(self.path, label))
+    def stats(self):
+        images = len(self.data_dict)
+        labels = sum(value is not None for value in self.data_dict.values()) 
+        missing = sum(value is None for value in self.data_dict.values())
+        return (("Total images", images), ("Total labels", labels), ("Total missing", missing))
+
+

@@ -34,8 +34,7 @@ class LoadDir:
 
 
 def scale(data):
-    logging.info(f'Labels: {data.labels}')
-    logging.info(f'Labels missing for images \n {data.missing_labels}')
+    logging.info(f'Data dict \n {data.data_dict}')
 
 def gray_scale(filepath):
     img_arr = load(filepath)
