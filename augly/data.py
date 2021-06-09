@@ -22,7 +22,6 @@
 """Contains the data loader class and other data related API entries."""
 
 import os
-import logging
 
 
 class Load:
@@ -49,8 +48,16 @@ class Load:
 
     
     def generate_data_dict(self):
+        """Generates a data dictionary with image paths and corresponding
+        label paths as key value pairs
+        
+        Returns:
+            data_dict: python dictonary with images and labels as key value pairs
+        """
         data_dict = {}
         supported_types = (".jpg", ".jpeg", ".png")
+        
+        # Check if the path is a file or directory
         if os.path.isfile(self.path):
             if not self.path.endswith(supported_types):
                 raise ValueError("Image format not supported. (jpg, jpeg, png)")
@@ -64,6 +71,14 @@ class Load:
 
 
     def get_label(self, file_path):
+        """Generates label file path if exists for an image.
+        
+        Args:
+            file_path: Image file path
+
+        Returns:
+            label_path: Full path to the label file
+        """
         split = file_path.rsplit('/', 1)
         label = split[1].rsplit('.', 1)[0] + '.' + self.label_type
         label_path = os.path.join(split[0]+'/', label)
@@ -71,7 +86,14 @@ class Load:
             return None
         return label_path
 
+    
     def stats(self):
+        """Generates simple stats for the selected dataset
+        
+        Returns:
+            Tuple with total images, labels and missing labels stats
+        
+        """
         images = len(self.data_dict)
         labels = sum(value is not None for value in self.data_dict.values()) 
         missing = sum(value is None for value in self.data_dict.values())
