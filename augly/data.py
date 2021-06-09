@@ -92,11 +92,9 @@ class Load:
         
         Returns:
             Tuple with total images, labels and missing labels stats
-        
         """
         images = len(self.data_dict)
         labels = sum(value is not None for value in self.data_dict.values()) 
-        #missing = sum(value is None for value in self.data_dict.values())
         missing = images - labels
         return (("Total images", images), ("Total labels", labels), ("Total missing", missing))
 
