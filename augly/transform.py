@@ -23,8 +23,6 @@
 
 import cv2
 
-from augly.img import save, load
-
 
 def gray_scale(filepath):
     """Convert image to grayscale
@@ -32,6 +30,6 @@ def gray_scale(filepath):
     Args:
         filepath: `PathLike` object that represents an image file path
     """
-    img_arr = load(filepath)
-    gray_arr = cv2.cvtColor(img_arr, cv2.COLOR_BGR2GRAY)
-    save(gray_arr, "gray", filepath)
+    #img_arr = load(filepath)
+    #gray_arr = cv2.cvtColor(img_arr, cv2.COLOR_BGR2GRAY)
+    #save(gray_arr, "gray", filepath)
