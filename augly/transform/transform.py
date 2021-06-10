@@ -22,14 +22,14 @@
 """Contains the image transformation related API entries."""
 
 import cv2
+from augly import utils
 
 
-def gray_scale(filepath):
+def gray_scale(data_dict):
     """Convert image to grayscale
     
     Args:
-        filepath: `PathLike` object that represents an image file path
+        data_dict: loaded image and labels dictonary
     """
-    #img_arr = load(filepath)
-    #gray_arr = cv2.cvtColor(img_arr, cv2.COLOR_BGR2GRAY)
-    #save(gray_arr, "gray", filepath)
+    img_arr = cv2.imread(data_dict[0])
+    utils.save_img(img_arr, "gray", data_dict[0])

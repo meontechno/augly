@@ -99,3 +99,14 @@ class Load:
         return (("Total images", images), ("Total labels", labels), ("Total missing", missing))
 
 
+    def apply(self, transform=[]):
+        """Apply image transform functions on the dataset
+        
+        Args:
+            transform: List of image transform functions to apply
+        """
+        for transformation in transform:
+            for i in map(transformation, self.data_dict.items()):
+                pass
+
+
