@@ -11,4 +11,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     dataset = data.Load('./test', load_labels=True)
     logging.info(dataset.stats())
-    dataset.apply([tr.gray_scale])
+    #dataset.apply([tr.gray_scale])
